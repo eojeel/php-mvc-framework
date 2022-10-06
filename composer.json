@@ -1,18 +1,15 @@
 {
-    "name": "thecodeholic/phpmvc-framework",
-    "authors": [
-        {
-            "name": "Zura Sekhniashvili",
-            "email": "zurasekhniashvili@gmail.com"
-        }
-    ],
+    "name": "eojeel/mvc-php",
     "autoload": {
         "psr-4": {
-            "app\\": "."
+            "app\\": "./"
         }
     },
-    "require": {
-        "vlucas/phpdotenv": "^5.0",
-        "thecodeholic/php-mvc-core": "^v1.0.5"
-    }
+    "authors": [
+        {
+            "name": "Joe lee",
+            "email": "eojeel@users.noreply.github.com"
+        }
+    ],
+    "require": {}
 }

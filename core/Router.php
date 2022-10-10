@@ -51,20 +51,24 @@ class Router
     public function resolve()
     {
         $path = $this->request->getPath();
-        $method = $this->request->getMethod();
-
+        $method = $this->request->method();
         $callback = $this->routes[$method][$path];
+
         if (!$callback) {
             $this->response->setStatusCode(404);
             return $this->render('errors/_404');
         }
 
-        if(is_string($callback))
-        {
+        if (is_string($callback)) {
             return $this->render($callback);
         }
 
-        return call_user_func($callback);
+        if (is_array($callback)) {
+            Application::$app->controller = new $callback[0]();
+            $callback[0] = Application::$app->controller;
+        }
+
+        return call_user_func($callback, $this->request);
     }
 
     /**
@@ -72,25 +76,64 @@ class Router
      * @param mixed $callback
      * @return void
      */
-    public function render($view)
+    public function render($view, $params = [])
     {
         $layoutContent = $this->layoutContent();
-        $viewContent = $this->renderView($view);
+        $viewContent = $this->renderView($view, $params);
         return str_replace('{{content}}', $viewContent, $layoutContent);
     }
 
+
+    /**
+     * Undocumented function
+     *
+     * @return void
+     */
     protected function layoutContent()
     {
+        $layout = Application::$app->controller->layout;
+
         ob_start();
-        include_once Application::$ROOT_DIR."/views/main.php";
+        include_once Application::$ROOT_DIR . "/views/$layout.php";
         return ob_get_clean();
     }
 
-    protected function renderView($view)
+    /**
+     * Undocumented function
+     *
+     * @param [type] $view
+     * @param [type] $params
+     * @return void
+     */
+    protected function renderView($view, $params)
     {
+        foreach ($params as $k => $v) {
+            $$k = $v;
+        }
+
         ob_start();
-        include_once Application::$ROOT_DIR."/views/$view.php";
+        include_once Application::$ROOT_DIR . "/views/$view.php";
         return ob_get_clean();
     }
 
+    /**
+     * Undocumented function
+     *
+     * @return void
+     */
+    public function getController()
+    {
+        return $this->controller;
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @param Controller $controller
+     * @return void
+     */
+    public function setController(Controller $controller)
+    {
+        $this->controller = $controller;
+    }
 }

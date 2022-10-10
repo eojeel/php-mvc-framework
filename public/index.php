@@ -10,4 +10,6 @@ $app->router->get('/', 'home');
 
 $app->router->get('/contact', 'contact');
 
+$app->router->post('/contact', fn() => 'Sosig');
+
 $app->run();

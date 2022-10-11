@@ -22,9 +22,6 @@ class AuthController extends Controller
     {
         $registerModel = new RegisterModel();
 
-        print_r($registerModel);
-
-
         if($request->isPost())
         {
             $registerModel->loadData($request->getBody());
@@ -32,6 +29,7 @@ class AuthController extends Controller
             {
                 return 'yay';
             }
+
             return $this->render('register', [
                 'model' => $registerModel]
             );

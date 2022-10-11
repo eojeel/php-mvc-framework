@@ -10,7 +10,16 @@ abstract class Model
     const RULE_MATCH = 'match';
     const RULE_UNIQUE = 'unique';
 
+    abstract public function rules(): array;
+    public array $errors = [];
 
+
+    /**
+     * Undocumented function
+     *
+     * @param [type] $data
+     * @return void
+     */
     public function loadData($data)
     {
         foreach($data as $k => $v)
@@ -22,10 +31,11 @@ abstract class Model
         }
     }
 
-    abstract public function rules(): array;
-
-    public array $errors = [];
-
+    /**
+     * Undocumented function
+     *
+     * @return void
+     */
     public function validate()
     {
         foreach($this->rules() as $attribute => $rules)
@@ -43,17 +53,78 @@ abstract class Model
                 {
                     $this->addError($attribute, SELF::RULE_REQUIRED);
                 }
+
+                if($ruleName === self::RULE_EMAIL && !filter_var($value, FILTER_VALIDATE_EMAIL))
+                {
+                    $this->addError($attribute, SELF::RULE_EMAIL);
+                }
+
+                if($ruleName === self::RULE_MIN && strlen($value) < $rule['min'])
+                {
+                    $this->addError($attribute, SELF::RULE_MIN, $rule);
+                }
+
+                if($ruleName === self::RULE_MAX && strlen($value) > $rule['max'])
+                {
+                    print_r($rule);
+                    exit;
+                    $this->addError($attribute, SELF::RULE_MAX, $rule);
+                }
+                if($ruleName === self::RULE_MATCH && $value !== $this->{$rule['match']})
+                {
+                    $this->addError($attribute, SELF::RULE_MATCH, $rule);
+                }
             }
         }
         return empty($this->errors);
     }
 
-    public function addError(string $attribute, string $rule)
+    /**
+     * Undocumented function
+     *
+     * @param string $attribute
+     * @param string $rule
+     * @param array $params
+     * @return void
+     */
+    public function addError(string $attribute, string $rule, $params = [])
     {
         $message = $this->errorMessage()[$rule] ?? '';
+        foreach($params as $k => $v)
+        {
+            $message = str_replace("{{$k}}", $v, $message);
+        }
         $this->errors[$attribute][] = $message;
     }
 
+    /**
+     * Undocumented function
+     *
+     * @param [type] $attribute
+     * @return boolean
+     */
+    public function hasError($attribute)
+    {
+        return $this->errors[$attribute] ?? false;
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @param [type] $attribute
+     * @return void
+     */
+    public function getFirstError($attribute)
+    {
+        $errors = $this->errors[$attribute] ?? [];
+        return $errors[0] ?? '';
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @return void
+     */
     public function errorMessage()
     {
         return [
@@ -65,4 +136,5 @@ abstract class Model
             self::RULE_UNIQUE => 'Record with with this {field} already exists',
         ];
     }
+
 }

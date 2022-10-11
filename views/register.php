@@ -2,10 +2,10 @@
     <h1>Contact</h1>
 
     <form action=""  method="POST">
-        <label for="fname">First name:</label><br>
-        <input type="text" id="fname" name="fname"><br>
-        <label for="lname">Last name:</label><br>
-        <input type="text" id="lname" name="lname"><br>
+        <label for="firstname">First name:</label><br>
+        <input type="text" id="firstname" name="firstname"><br>
+        <label for="lastname">Last name:</label><br>
+        <input type="text" id="lastname" name="lastname"><br>
         <label for="email">Email:</label><br>
         <input type="text" id="email" name="email"><br>
         <label for="password">Password:</label><br>

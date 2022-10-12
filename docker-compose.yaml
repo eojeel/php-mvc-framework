@@ -3,6 +3,7 @@ version: "3.9"
 services:
   app:
     build: ./docker
+    container_name: php-mvc
     image: eojeel/php_mvc
     ports:
       - "8080:80"

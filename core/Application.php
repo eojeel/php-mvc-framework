@@ -3,6 +3,7 @@ namespace app\core;
 
 use app\core\Router;
 use app\core\Request;
+use app\core\Session;
 use app\core\Database;
 use app\core\Response;
 
@@ -14,6 +15,7 @@ class Application
     public Router $router;
     public Request $request;
     public Response $response;
+    public Session $session;
     public Controller $controller;
 
     public function __construct($rootPath, array $config)
@@ -22,6 +24,7 @@ class Application
         self::$app = $this;
         $this->request = new Request();
         $this->response = new Response();
+        $this->session = new Session();
         $this->router = new Router($this->request, $this->response);
 
         $this->db = new Database($config['db']);

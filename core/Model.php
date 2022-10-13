@@ -1,5 +1,5 @@
 <?php
-namespace App\core;
+namespace app\core;
 
 abstract class Model
 {
@@ -70,9 +70,24 @@ abstract class Model
                     exit;
                     $this->addError($attribute, SELF::RULE_MAX, $rule);
                 }
+
                 if($ruleName === self::RULE_MATCH && $value !== $this->{$rule['match']})
                 {
                     $this->addError($attribute, SELF::RULE_MATCH, $rule);
+                }
+
+                if($ruleName === self::RULE_UNIQUE) {
+                    $className = $rule['class'];
+                    $uniqueAttr =$rule['attribute'] ?? $attribute;
+                    $tableName = $className::tableName();
+                    $stmt = Application::$app->db->sqlLite->prepare("SELECT * FROM $tableName WHERE $uniqueAttr = :$uniqueAttr");
+                    $stmt->bindValue(":$attribute", $value);
+                    $results = $stmt->execute();
+                    $result = $results->fetchArray();
+                    if($result)
+                    {
+                        $this->addError($attribute, self::RULE_UNIQUE, ['field' => $attribute]);
+                    }
                 }
             }
         }
@@ -133,7 +148,7 @@ abstract class Model
             self::RULE_MIN => 'Min length of this field must be {min}',
             self::RULE_MAX => 'Max length of this field must be {max}',
             self::RULE_MATCH => 'This field must be the same as {match}',
-            self::RULE_UNIQUE => 'Record with with this {field} already exists',
+            self::RULE_UNIQUE => 'Record with with this {field} already exists'
         ];
     }
 

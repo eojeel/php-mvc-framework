@@ -26,7 +26,7 @@ class Database
             include_once Application::$ROOT_DIR.'/migrations/'.$migration;
             $className = pathinfo($migration, PATHINFO_FILENAME);
             $instance = new $className();
-            echo "Applying Migration $migration".PHP_EOL;
+            $this->log("Applying Migration $migration");
             $instance->up();
             $completedMigrations[] = $migration;
         }
@@ -34,6 +34,8 @@ class Database
         if(!empty($completedMigrations))
         {
             $this->savedMigrations($completedMigrations);
+        } else {
+            $this->log("All Migrations Applied");
         }
     }
 
@@ -48,7 +50,7 @@ class Database
 
         $stmt = $this->sqlLite->query("SELECT migration FROM migrations");
         while($res = $stmt->fetchArray(SQLITE3_ASSOC)){
-            $results[] = $res;
+            $results[] = $res['migration'];
         }
         return $results;
     }
@@ -58,5 +60,10 @@ class Database
         $migrations = implode(',', array_map(fn($m) => "('$m')", $migrations));
 
         $this->sqlLite->exec("INSERT INTO migrations (migration) VALUES ".$migrations."");
+    }
+
+    protected function log($message)
+    {
+        echo '['.date('Y-m-d H:i:s').'] - '.$message.PHP_EOL;
     }
 }

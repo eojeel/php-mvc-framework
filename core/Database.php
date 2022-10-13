@@ -11,7 +11,7 @@ class Database
 
     public function __construct()
     {
-        $this->sqlLite = new SQLite3($_ENV['DBFILE'], SQLITE3_OPEN_READWRITE | SQLITE3_OPEN_CREATE);
+        $this->sqlLite = new SQLite3(__DIR__.'/../'.$_ENV['DBFILE'], SQLITE3_OPEN_READWRITE | SQLITE3_OPEN_CREATE);
     }
 
     public function applyMigrations()

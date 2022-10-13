@@ -1,1 +1,1 @@
-DBFILE = 'phpmvc.sql';
+DBFILE='phpmvc.db'

@@ -2,7 +2,7 @@
 
 namespace app\core\form;
 
-use App\core\Model;
+use app\core\Model;
 
 class Field
 {
@@ -14,7 +14,7 @@ class Field
     public string $attribute;
     public string $type;
 
-    public function __construct(\app\core\Model $model, string $attirbute)
+    public function __construct(Model $model, string $attirbute)
     {
         $this->type = self::TYPE_TEXT;
         $this->model = $model;
@@ -26,7 +26,7 @@ class Field
         return sprintf('<label>%s:</label><br>
         <input type="%s" name="%s" value="%s" class="%s">
         <div class="text-rose-600 dark:text-rose-500 text-sm">%s</div><br>',
-        $this->attribute,
+        $this->model->getLabel($this->attribute),
         $this->type,
         $this->attribute,
         $this->model->{$this->attribute},

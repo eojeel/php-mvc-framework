@@ -14,6 +14,23 @@ abstract class Model
     public array $errors = [];
 
 
+    public function labels() : array
+    {
+        return [
+             'firstname' => 'First Name',
+            'lastname' => 'Last Name',
+            'email' => 'Email',
+            'password' => 'Password',
+            'confirmPassword' => 'Password'
+        ];
+    }
+
+    public function getLabel($attribute)
+    {
+        return $this->labels()[$attribute] ?? $attribute;
+    }
+
+
     /**
      * Undocumented function
      *
@@ -51,29 +68,28 @@ abstract class Model
 
                 if($ruleName === self::RULE_REQUIRED && !$value)
                 {
-                    $this->addError($attribute, SELF::RULE_REQUIRED);
+                    $this->addErrorForRule($attribute, SELF::RULE_REQUIRED);
                 }
 
                 if($ruleName === self::RULE_EMAIL && !filter_var($value, FILTER_VALIDATE_EMAIL))
                 {
-                    $this->addError($attribute, SELF::RULE_EMAIL);
+                    $this->addErrorForRule($attribute, SELF::RULE_EMAIL);
                 }
 
                 if($ruleName === self::RULE_MIN && strlen($value) < $rule['min'])
                 {
-                    $this->addError($attribute, SELF::RULE_MIN, $rule);
+                    $this->addErrorForRule($attribute, SELF::RULE_MIN, $rule);
                 }
 
                 if($ruleName === self::RULE_MAX && strlen($value) > $rule['max'])
                 {
-                    print_r($rule);
-                    exit;
-                    $this->addError($attribute, SELF::RULE_MAX, $rule);
+                    $this->addErrorForRule($attribute, SELF::RULE_MAX, $rule);
                 }
 
                 if($ruleName === self::RULE_MATCH && $value !== $this->{$rule['match']})
                 {
-                    $this->addError($attribute, SELF::RULE_MATCH, $rule);
+                    $rule['match'] = $this->getLabel($rule['match']);
+                    $this->addErrorForRule($attribute, SELF::RULE_MATCH, $rule);
                 }
 
                 if($ruleName === self::RULE_UNIQUE) {
@@ -86,7 +102,9 @@ abstract class Model
                     $result = $results->fetchArray();
                     if($result)
                     {
-                        $this->addError($attribute, self::RULE_UNIQUE, ['field' => $attribute]);
+                        $this->addErrorForRule($attribute,
+                        self::RULE_UNIQUE,
+                        ['field' => $this->getLabel($attribute)]);
                     }
                 }
             }
@@ -102,13 +120,18 @@ abstract class Model
      * @param array $params
      * @return void
      */
-    public function addError(string $attribute, string $rule, $params = [])
+    private function addErrorForRule(string $attribute, string $rule, $params = [])
     {
         $message = $this->errorMessage()[$rule] ?? '';
         foreach($params as $k => $v)
         {
             $message = str_replace("{{$k}}", $v, $message);
         }
+        $this->errors[$attribute][] = $message;
+    }
+
+    public function addError(string $attribute, string $message)
+    {
         $this->errors[$attribute][] = $message;
     }
 

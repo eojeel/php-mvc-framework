@@ -1,4 +1,4 @@
-<div class="w-full px-4 md:px-6 text-xl text-gray-800 leading-normal" style="font-family:Georgia,serif;">
+<div class="w-full px-4 md:px-6 text-xl text-gray-800 leading-normal">
 
     <!--Title-->
     <div class="font-sans">

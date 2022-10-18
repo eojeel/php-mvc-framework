@@ -3,6 +3,7 @@
 namespace app\core;
 
 use app\core\Model;
+use pp\models\User;
 
 abstract class dbModel extends Model
 {
@@ -29,5 +30,29 @@ abstract class dbModel extends Model
     public static function prepare($sql)
     {
         return Application::$app->db->sqlLite->prepare($sql);
+    }
+
+    public function findOne($where) // ['email' => 'email@email.com']
+    {
+        $tableName = static::tableName();
+        $sql = implode("AND ",
+        array_map(fn($attr) => "$attr = :$attr",
+        array_keys($where)));
+
+        $statment = self::prepare("SELECT * FROM $tableName WHERE $sql");
+        foreach($where as $k => $v)
+        {
+            $statment->bindParam(":$", $v);
+        }
+        $rs = $statment->execute();
+        $results = $rs->fetchArray();
+
+        echo $results;
+        exit;
+
+        // $user = new User();
+        // $user->password = $results['password'];
+
+        // return $user;
     }
 }

@@ -1,22 +1,33 @@
 <?php
 namespace app\controllers;
 
-use app\core\Application;
-use app\core\Request;
-use app\core\Controller;
 use app\models\User;
+use app\core\Request;
+use app\core\Response;
+use app\core\Controller;
+use app\core\Application;
+use app\models\LoginForm;
 
 class AuthController extends Controller
 {
-    public function login(Request $request)
+    public function login(Request $request, Response $response)
     {
+    $LoginForm = new LoginForm();
         if($request->isPost())
         {
-            return 'Handle submitted data';
+            $LoginForm->loadData($request->getBody());
+            if($LoginForm->validate() && $LoginForm->login())
+            {
+                $response->redirect('/');
+                return;
+            }
         }
 
         $this->setLayout('auth');
-        return $this->render('login');
+
+        return $this->render('login', [
+            'model' => $LoginForm]
+        );
     }
 
     public function register(Request $request)

@@ -23,6 +23,7 @@ abstract class dbModel extends Model
             $statment->bindValue(":$attribute", $this->{$attribute});
         }
         $statment->execute();
+        return true;
     }
 
     public static function prepare($sql)

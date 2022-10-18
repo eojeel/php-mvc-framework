@@ -25,3 +25,4 @@ optimise autoload files
 ## db (issues)
 if fresh DB is generated run:
 `docker-compose exec chown www-data:www-data /var/www/phpmvc.db`
+`docker-compose exec app chown www-data:www-data /var/www/`

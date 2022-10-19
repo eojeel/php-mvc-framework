@@ -17,6 +17,17 @@ class User extends dbModel
     public string $password = '';
     public string $confirmPassword = '';
 
+    public function setUser(array $user)
+    {
+        foreach($user as $k => $v)
+        {
+            if(isset($this->$k))
+            {
+                $this->$k = $v;
+            }
+        }
+    }
+
     public function register()
     {
         $this->status = SELF::STATUS_INACTIVE;
@@ -41,6 +52,11 @@ class User extends dbModel
     public function tableName() : string
     {
         return 'users';
+    }
+
+    public function primaryKey() : string
+    {
+        return 'id';
     }
 
     public function attributes() : array

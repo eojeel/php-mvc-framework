@@ -31,9 +31,6 @@ class LoginForm extends Model
     {
         $user = new User();
         $loggedInUser = $user->findOne(['email' => $this->email]);
-
-        print_r($loggedInUser);
-        exit;
         if(!$loggedInUser)
         {
             $this->addError('email', 'User Does not exists with this email');
@@ -45,9 +42,6 @@ class LoginForm extends Model
             return false;
         }
 
-        print_r($user);
-        exit;
-
-        return Application::$app->login($user);
+        return Application::$app->login($loggedInUser);
     }
 }

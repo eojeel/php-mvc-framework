@@ -17,6 +17,7 @@ class Application
     public Response $response;
     public Session $session;
     public Controller $controller;
+    public ?dbModel $dbModel;
 
     public function __construct($rootPath, array $config)
     {
@@ -28,6 +29,17 @@ class Application
         $this->router = new Router($this->request, $this->response);
 
         $this->db = new Database($config['db']);
+    }
+
+    public function login(dbModel $user)
+    {
+        print_r($user);
+        print_r('anal');
+        exit;
+        $this->user = $user;
+        $primaryKey = $user->primaryKey();
+        $primaryValue = $user->{$primaryKey};
+        $this->session->set('user', $primaryValue);
     }
 
     public function run()

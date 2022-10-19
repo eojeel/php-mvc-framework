@@ -3,13 +3,15 @@
 namespace app\core;
 
 use app\core\Model;
-use pp\models\User;
+use app\models\User;
 
 abstract class dbModel extends Model
 {
     abstract public function tableName() : string;
 
     abstract public function attributes() : array;
+
+    abstract public function primaryKey() : string;
 
     public function save()
     {
@@ -34,7 +36,7 @@ abstract class dbModel extends Model
 
     public function findOne($where) // ['email' => 'email@email.com']
     {
-        $tableName = static::tableName();
+        $tableName = $this->tableName();
         $sql = implode("AND ",
         array_map(fn($attr) => "$attr = :$attr",
         array_keys($where)));
@@ -42,17 +44,18 @@ abstract class dbModel extends Model
         $statment = self::prepare("SELECT * FROM $tableName WHERE $sql");
         foreach($where as $k => $v)
         {
-            $statment->bindParam(":$", $v);
+            $statment->bindParam(":$k", $v);
         }
+
         $rs = $statment->execute();
-        $results = $rs->fetchArray();
+        $result = $rs->fetchArray(SQLITE3_ASSOC);
+        if(empty($result))
+        {
+            return false;
+        }
 
-        echo $results;
-        exit;
-
-        // $user = new User();
-        // $user->password = $results['password'];
-
-        // return $user;
+        $user = new User();
+        $user->setUser($result);
+        return $user;
     }
 }

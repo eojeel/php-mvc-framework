@@ -1,6 +1,7 @@
 <?php
 
 use app\core\Application;
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -42,15 +43,21 @@ use app\core\Application;
 
             <div class="w-full flex-grow lg:flex lg:items-center lg:w-auto hidden lg:block mt-2 lg:mt-0 bg-gray-100 md:bg-transparent z-20" id="nav-content">
                 <ul class="list-reset lg:flex justify-end flex-1 items-center">
-                    <li class="mr-3">
-                        <a class="inline-block py-2 px-4 text-gray-900 font-bold no-underline" href="#">Active</a>
-                    </li>
+                    <?php if(Application::isGuest()): ?>
                     <li class="mr-3">
                         <a class="inline-block text-gray-600 no-underline hover:text-gray-900 hover:text-underline py-2 px-4" href="/login">Login</a>
                     </li>
                     <li class="mr-3">
                         <a class="inline-block text-gray-600 no-underline hover:text-gray-900 hover:text-underline py-2 px-4" href="/register">Register</a>
                     </li>
+                    <?php else: ?>
+                        <li class="mr-3">
+                        <a class="inline-block py-2 px-4 text-gray-900 font-bold no-underline" href="/profile">profile</a>
+                    </li>
+                    <li class="mr-3">
+                        <a class="inline-block py-2 px-4 text-gray-900 font-bold no-underline" href="/logout">Logout <?= Application::$app->user->getDisplayName() ?></a>
+                    </li>
+                    <?php endif; ?>
                 </ul>
             </div>
         </div>

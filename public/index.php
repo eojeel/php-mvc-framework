@@ -5,6 +5,7 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 use Dotenv\Dotenv;
+use app\models\User;
 use app\core\Application;
 use app\controllers\AuthController;
 use app\controllers\SiteController;
@@ -15,6 +16,7 @@ $dotenv = Dotenv::createImmutable(__DIR__.'/../');
 $dotenv->load();
 
 $config = [
+    'userClass' => User::class,
     'db' => [
         'file' => $_ENV['DBFILE']
     ]
@@ -32,5 +34,9 @@ $app->router->get('/', [SiteController::class, 'home']);
 
 $app->router->get('/contact', [SiteController::class, 'contact']);
 $app->router->post('/contact', [SiteController::class, 'handleContact']);
+
+$app->router->get('/logout', [AuthController::class, 'logout']);
+
+$app->router->get('/profile', [AuthController::class, 'profile']);
 
 $app->run();

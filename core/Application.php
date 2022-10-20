@@ -11,40 +11,73 @@ class Application
 {
     public static Application $app;
     public static string $ROOT_DIR;
+    public string $userClass;
+
     public Database $db;
     public Router $router;
     public Request $request;
     public Response $response;
     public Session $session;
-    public Controller $controller;
+
+    public ?Controller $controller = null;
     public ?dbModel $dbModel;
 
     public function __construct($rootPath, array $config)
     {
         self::$ROOT_DIR = $rootPath;
         self::$app = $this;
+
+        $this->userClass = $config['userClass'];
         $this->request = new Request();
         $this->response = new Response();
         $this->session = new Session();
         $this->router = new Router($this->request, $this->response);
 
         $this->db = new Database($config['db']);
+
+
+        $primaryValue = $this->session->get('user');
+        if($primaryValue)
+        {
+            $userclass = new $this->userClass();
+            $primaryKey = $userclass->primaryKey();
+            $this->user = $userclass->findOne([$primaryKey => $primaryValue]);
+        } else {
+            $this->user = null;
+        }
     }
 
     public function login(dbModel $user)
     {
-        print_r($user);
-        print_r('anal');
-        exit;
         $this->user = $user;
         $primaryKey = $user->primaryKey();
         $primaryValue = $user->{$primaryKey};
         $this->session->set('user', $primaryValue);
+        return true;
+    }
+
+    public function logout()
+    {
+        $this->user = null;
+        $this->session->remove('user');
+    }
+
+    public static function isGuest()
+    {
+        return !self::$app->user;
     }
 
     public function run()
     {
-        echo $this->router->resolve();
+        try {
+            $this->router->resolve();
+        } catch (\Exception $e) {
+            $this->response->setStatusCode($e->getCode());
+            echo $this->router->render('_error', [
+                'exception' => $e
+                ]);
+        }
+
     }
 
 }

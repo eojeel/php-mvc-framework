@@ -1,9 +1,5 @@
 <?php
 
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
 use Dotenv\Dotenv;
 use app\models\User;
 use app\core\Application;
@@ -33,7 +29,7 @@ $app->router->post('/register', [AuthController::class, 'register']);
 $app->router->get('/', [SiteController::class, 'home']);
 
 $app->router->get('/contact', [SiteController::class, 'contact']);
-$app->router->post('/contact', [SiteController::class, 'handleContact']);
+$app->router->post('/contact', [SiteController::class, 'contact']);
 
 $app->router->get('/logout', [AuthController::class, 'logout']);
 

@@ -1,9 +1,10 @@
 <?php
 
-namespace app\core;
+namespace app\core\db;
 
 use app\core\Model;
 use app\models\User;
+use app\core\Application;
 
 abstract class dbModel extends Model
 {

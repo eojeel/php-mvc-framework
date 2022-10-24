@@ -10,10 +10,13 @@ class Session
     {
         session_start();
         $flashMessages = $_SESSION[self::FLASH_KEY] ?? [];
-        foreach($flashMessages as $k => &$v)
+        if(is_array($flashMessages))
         {
-            $v['remove'] = true;
-            $_SESSION[self::FLASH_KEY] = $v;
+            foreach($flashMessages as $k => &$v)
+            {
+                $v['remove'] = true;
+                $_SESSION[self::FLASH_KEY] = $v;
+            }
         }
     }
 

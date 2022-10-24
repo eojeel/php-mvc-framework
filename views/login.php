@@ -1,6 +1,8 @@
 <?php
 use app\core\form\Form;
 
+$this->title = 'Login';
+
 $form = Form::begin('', 'post');
 ?>
 <div class="w-full px-4 md:px-6 text-xl text-gray-800 leading-normal">

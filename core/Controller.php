@@ -17,7 +17,7 @@ class Controller
 
     public function render($view, $params = [])
     {
-        return Application::$app->router->render($view, $params);
+        return Application::$app->view->render($view, $params);
     }
 
     public function setLayout($layout)
@@ -30,7 +30,7 @@ class Controller
         $this->middlewares[] = $middleware;
     }
 
-    public function getMiddlewares() : array
+    public function getMiddlewares()
     {
         return $this->middlewares;
     }

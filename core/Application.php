@@ -1,11 +1,13 @@
 <?php
 namespace app\core;
 
+use app\core\View;
 use app\core\Router;
 use app\core\Request;
 use app\core\Session;
-use app\core\Database;
 use app\core\Response;
+use app\core\db\dbModel;
+use app\core\db\Database;
 
 class Application
 {
@@ -18,6 +20,7 @@ class Application
     public Request $request;
     public Response $response;
     public Session $session;
+    public View $view;
 
     public ?Controller $controller = null;
     public ?dbModel $dbModel;
@@ -32,6 +35,7 @@ class Application
         $this->response = new Response();
         $this->session = new Session();
         $this->router = new Router($this->request, $this->response);
+        $this->view = new View();
 
         $this->db = new Database($config['db']);
 
@@ -70,10 +74,10 @@ class Application
     public function run()
     {
         try {
-            $this->router->resolve();
+           echo $this->router->resolve();
         } catch (\Exception $e) {
             $this->response->setStatusCode($e->getCode());
-            echo $this->router->render('_error', [
+            echo $this->view->render('_error', [
                 'exception' => $e
                 ]);
         }

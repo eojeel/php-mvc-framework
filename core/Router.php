@@ -62,7 +62,7 @@ class Router
         }
 
         if (is_string($callback)) {
-            return $this->render($callback);
+            return $this->view->render($callback);
         }
 
         if (is_array($callback)) {
@@ -78,54 +78,6 @@ class Router
         }
 
         return call_user_func($callback, $this->request, $this->response);
-    }
-
-    /**
-     *
-     * @param mixed $callback
-     * @return void
-     */
-    public function render($view, $params = [])
-    {
-        $layoutContent = $this->layoutContent();
-        $viewContent = $this->renderView($view, $params);
-        return str_replace('{{content}}', $viewContent, $layoutContent);
-    }
-
-
-    /**
-     * Undocumented function
-     *
-     * @return void
-     */
-    protected function layoutContent()
-    {
-        $layout = $this->layout;
-        if(Application::$app->controller)
-        {
-            $layout = Application::$app->controller->layout;
-        }
-        ob_start();
-        include_once Application::$ROOT_DIR . "/views/$layout.php";
-        return ob_get_clean();
-    }
-
-    /**
-     * Undocumented function
-     *
-     * @param [type] $view
-     * @param [type] $params
-     * @return void
-     */
-    protected function renderView($view, $params)
-    {
-        foreach ($params as $k => $v) {
-            $$k = $v;
-        }
-
-        ob_start();
-        include_once Application::$ROOT_DIR . "/views/$view.php";
-        return ob_get_clean();
     }
 
     /**

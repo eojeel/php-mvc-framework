@@ -14,6 +14,4 @@ $this->title = 'Register';
     ?>
     <button type="submit" class="flex-1 mt-4 block md:inline-block appearance-none bg-green-500 text-white text-base font-semibold tracking-wider uppercase py-4 rounded shadow hover:bg-green-400">Submit</button>
     <?php echo Form::end() ?>
-
-    <form action=""  method="POST">
 </div>

@@ -24,6 +24,7 @@ class AuthController extends Controller
             $LoginForm->loadData($request->getBody());
             if($LoginForm->validate() && $LoginForm->login())
             {
+                Application::$app->session->setFlash('flash_messages', 'Thanks for Logging In!');
                 $response->redirect('/');
                 return;
             }
@@ -45,7 +46,10 @@ class AuthController extends Controller
             $User->loadData($request->getBody());
             if($User->validate() && $User->register())
             {
-                Application::$app->session->setFlash('success', 'Thanks for Registering');
+                $loggedInUser = $User->findOne(['email' => $User->email]);
+
+                Application::$app->session->setFlash('flash_messages', 'Thanks for Registering');
+                Application::$app->login($loggedInUser);
                 Application::$app->response->redirect('/');
             }
 

@@ -12,10 +12,11 @@ class Session
         $flashMessages = $_SESSION[self::FLASH_KEY] ?? [];
         if(is_array($flashMessages))
         {
-            foreach($flashMessages as $k => &$v)
+            foreach($flashMessages as $k => $v)
             {
                 $v['remove'] = true;
-                $_SESSION[self::FLASH_KEY] = $v;
+                $_SESSION[self::FLASH_KEY][$k] = $v;
+
             }
         }
     }
@@ -50,11 +51,11 @@ class Session
 
     public function __destruct()
     {
-        foreach($_SESSION[self::FLASH_KEY] ?? [] as $k => &$v)
+        foreach($_SESSION[self::FLASH_KEY] ?? [] as $k => $v)
         {
-            if($v['remove'])
+            if(isset($v['remove']) && $v['remove'])
             {
-                unset($v[$k]);
+                unset($_SESSION[self::FLASH_KEY][$k]);
             }
         }
     }

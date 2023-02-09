@@ -18,5 +18,8 @@
         "allow-plugins": {
             "pestphp/pest-plugin": true
         }
+    },
+    "require-dev": {
+        "symfony/var-dumper": "^6.2"
     }
 }
